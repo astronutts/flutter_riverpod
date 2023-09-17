@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_study_0915/repos/todo_repo.dart';
 import 'package:flutter_study_0915/secondDetiall.dart';
 import 'package:flutter_study_0915/subDetail.dart';
 import 'package:flutter_study_0915/thirdDetail.dart';
+import 'package:flutter_study_0915/view_models/todo_vm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+    ],
+  );
+
+  final preferences = await SharedPreferences.getInstance();
+  final repository = ToDoRepository(preferences);
+
+  runApp(ProviderScope(
+      overrides: [todoProvider.overrideWith(() => ToDoViewModel(repository))],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

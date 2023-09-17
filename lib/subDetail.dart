@@ -1,59 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_study_0915/view_models/todo_vm.dart';
 
-class SubDetail extends StatefulWidget {
+class SubDetail extends ConsumerStatefulWidget {
   const SubDetail({super.key});
 
   @override
-  State<SubDetail> createState() => _SubDetailState();
+  ConsumerState<SubDetail> createState() => _SubDetailState();
 }
 
-class _SubDetailState extends State<SubDetail> {
+class _SubDetailState extends ConsumerState<SubDetail> {
   List<String> todoList = List.empty(growable: true);
 
-  void _addNavigation(BuildContext context) async {
-    final result = await Navigator.of(context).pushNamed('/second');
-    setState(() {
-      todoList.add(result as String);
-    });
+  void _addNavigation(BuildContext context) {
+    Navigator.of(context).pushNamed('/second');
   }
 
   @override
   void initState() {
     super.initState();
-    todoList.add('스터디 공부');
-    todoList.add('클론 코딩');
-    todoList.add('파이어베이스 구현');
-    todoList.add('복습 및 블로그 포스팅');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sub Detail Example'),
+        backgroundColor: Colors.red,
+        title: const Text(
+          'Discipline List',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView.builder(
         itemBuilder: ((context, index) {
           return Card(
             elevation: 2,
-            child: InkWell(
-              //탭, 더블탭, 롱탭 등 다양한 터치 이벤트를 처리할 수 있는 위젯
-              child: Text(
-                '${index + 1}. ${todoList[index]}',
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                Navigator.of(context)
-                    .pushNamed('/third', arguments: todoList[index]);
-              },
+            child: Text(
+              ref.watch(todoProvider).todo,
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
           );
         }),
         itemCount: todoList.length,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
         onPressed: () {
           _addNavigation(context);
         },

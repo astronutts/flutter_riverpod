@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_study_0915/view_models/todo_vm.dart';
 
-class SecondDetail extends StatelessWidget {
+class SecondDetail extends ConsumerWidget {
   const SecondDetail({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController controller = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Second Page'),
+        backgroundColor: Colors.red,
+        title: const Text('Drop your Discipline'),
       ),
       body: Container(
         child: Center(
@@ -21,10 +24,16 @@ class SecondDetail extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop(controller.value.text);
+                  ref.watch(todoProvider.notifier).setTodo(controller.text);
+                  print(ref.watch(todoProvider));
+                  Navigator.of(context).pop();
                 },
-                child: const Text(
-                  '세 번째 페이지로 가기!',
+                child: const SizedBox(
+                  width: 200,
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'Register',
+                  ),
                 ),
               ),
             ],
